@@ -69,23 +69,79 @@ class myYOLO(YOLO):
         pass
 
 
-class Model():
+class Model:
     def __init__(self):
-        pass
-        # self.yolo_det = myYOLO('')
-        # self.yolo_cls = myYOLO('/ultralytics-main/ultralytics/cfg/models/v8/yolov8m-cls.pt')
+        self.model_classify_path = r'model_classify.onnx'
+        self.model_detect_path = r'model_detect.onnx'
+        self.model_classify = YOLO(self.model_classify_path)
+        self.model_detect = YOLO(self.model_detect_path)
+        self.names = {0: '中介蝮', 1: '中华珊瑚蛇（丽纹蛇）', 2: '中国水蛇', 3: '孟加拉眼镜蛇', 4: '尖吻蝮',
+                      5: '山烙铁头',
+                      6: '泰国圆斑蝰', 7: '湖北颈槽蛇', 8: '白唇竹叶青', 9: '白头缅蝰', 10: '眼镜王蛇', 11: '短尾蝮',
+                      12: '福建华珊瑚蛇（福建丽纹蛇）', 13: '紫沙蛇', 14: '繁花林蛇', 15: '红脖颈槽蛇', 16: '舟山眼镜蛇',
+                      17: '菜花原矛头蝮', 18: '虎斑颈槽蛇', 19: '金环蛇', 20: '铅色水蛇', 21: '银环蛇', 22: '黑头缅蝰',
+                      23: '（尖鳞）原矛头蝮'}
 
-    def predict(self, img):
-        pass
+    def predict(self, img: Image):
+        """
+        detect img
+        split img
+        classify img
+        get data
+        Args:
+            img:
 
-    def detect(self, img):
-        pass
+        Returns:
 
-    def split_image(self, img):
-        pass
+        """
+        boxes = self.detect(img)
+        img_split = self.split_image(img, boxes)
+        top5, top5conf = self.classify(img_split)
 
-    def classify(self, img):
-        pass
+    def detect(self, img: Image):
+        """
+        对图像进行目标检测，返回Result中的boxes
+        Args:
+            img:所给图像
+
+        Returns:目标检测结果
+
+        """
+        results = self.model_detect.predict(img)
+        boxes = results[0].boxes
+        return boxes
+
+    def split_image(self, img: Image, boxes):
+        """
+        根据目标检测结果对图像进行裁剪预处理,如果没有检测结果则直接返回原始图像
+        Args:
+            img:所给图像
+            boxes:该图像目标检测框
+
+        Returns:裁剪后的图像
+
+        """
+        if boxes.cls.numel():
+            xyxy = boxes.xyxy.cpu().numpy().tolist()[0]
+            img_split = img.crop(xyxy)
+            return img_split
+        else:
+            return img
+
+    def classify(self, img: Image):
+        """
+        对预处理后的图片进行图像分类，返回top5,top5conf
+        Args:
+            img: 预处理后的图片
+
+        Returns:top5：分类结果列表
+                top5conf：置信度列表
+
+        """
+        results = self.model_classify.predict(img)
+        top5 = results[0].probs.top5
+        top5conf = results[0].probs.top5conf
+        return top5, top5conf
 
     def get_text(self, top5, top5conf):
         results = dict.fromkeys(top5, None)
