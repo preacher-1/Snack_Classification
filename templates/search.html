@@ -1,0 +1,59 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0017)https://iqdb.org/ -->
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Fast Snake Identify Tool</title>
+</head>
+<body>
+<h1>Multi-service image search</h1>
+<form action="" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p class="flow">
+        Upload an image or thumbnail from a file or URL to find it (or similar images) among:
+    </p>
+    <br>
+    <table class="form" style="font-size: 100%;">
+        <tbody>
+        <tr>
+            <th>
+                <label for="file">File</label>
+            </th>
+            <td>
+                <input type="file" name="file" id="file" size="50">
+            </td>
+        </tr>
+        <tr>
+            <td>or
+            </td>
+        </tr>
+        <tr>
+            <th>
+                <label for="url">Source URL</label>
+            </th>
+            <td>
+                <input type="text" name="url" id="url" size="50" placeholder="https://">
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="submit" value="submit" accesskey="s">
+            </td>
+            <!--
+            <td>
+                <label>[ <input type="checkbox" name="forcegray"> ignore colors ]</label>
+            </td>
+            -->
+        </tr>
+        </tbody>
+    </table>
+    <ul>
+        <li>Supported file types are JPEG and PNG</li>
+        <li>Maximum file size: 8192 KB</li>
+        <li>Maximum image dimensions: 7500x7500</li>
+    </ul>
+</form>
+<div>{{ img|safe }}</div>
+<div>{{ textmessage }}</div>
+</body>
+</html>

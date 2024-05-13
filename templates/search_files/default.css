@@ -1,0 +1,17 @@
+table th {
+	font-weight: bold;
+	text-align: left;
+	vertical-align: top;
+	padding: 0.2em 0.5em;
+	white-space: nowrap;
+}
+img.service-icon {
+	height: 15px;
+}
+img.service-icon#list {
+	margin: 1px 0px 0px 0px;
+}
+img.service-icon#source {
+	vertical-align: top;
+	margin: -1px 5px 0px 0px;
+}
