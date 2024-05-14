@@ -1,6 +1,3 @@
-import requests
-from requests.exceptions import RequestException
-from io import BytesIO
 from PIL import Image
 from ultralytics import YOLO
 from TestModel.models import Textdata
@@ -21,52 +18,6 @@ from TestModel.models import Textdata
 #         |    |--orig_shape
 #         |    |--path
 #     """
-#
-#     def __init__(self, model_path):
-#         super().__init__(model_path)
-#         # self.result = None
-#
-#     def predict(self, *args):
-#         pass
-#
-#     # 处理URL，获取图片并进行预测
-#     def process_url(self, url):
-#         try:
-#             # 发送GET请求获取图片数据
-#             response = requests.get(url)
-#             response.raise_for_status()  # 检查响应是否成功
-#         except RequestException as e:
-#             # 捕获请求异常
-#             print("请求图片失败:", e)
-#             return None  # 返回None表示出现异常
-#         # 解析图片数据
-#         try:
-#             # 读取图片数据
-#             image_data = BytesIO(response.content)
-#             # 使用Pillow库打开图片
-#             img = Image.open(image_data)
-#             # return img  # 返回图片对象
-#         except Exception as e:
-#             # 捕获其他异常，比如图片数据无效等
-#             print("处理图片失败:", e)
-#             response
-#             return None  # 返回None表示出现异常
-#         # 调用模型预测
-#         self.result = super().predict(img)
-#         # return self.result
-#
-#     # 图片预处理，待实现
-#     def process_image(self, img):
-#         pass
-#
-#     # 与数据库交互，返回有关文本信息，待实现
-#     def process_flag(self):
-#         top5 = self.result.probs.top5
-#         top5conf = self.result.probs.top5conf
-#         # names = [self.result.names[i] for i in top5]
-#
-#         # 待实现：与数据库交互，返回有关文本信息
-#         pass
 
 
 class Model:
@@ -93,12 +44,10 @@ class Model:
 
         """
         boxes = self.detect(img)
-        img_split = self.split_image(img=img, boxes=boxes)
-        top5, top5conf = self.classify(img_split)
-        results = self.get_text(top5, top5conf)
-        return results
-        img_splits = self.split_image(img, boxes)
+        img_splits = self.split_image(img=img, boxes=boxes)
         top5_data = self.classify(img_splits)
+        results = self.get_text(top5_data)
+        return results
 
     def detect(self, img: Image):
         """
@@ -147,24 +96,37 @@ class Model:
         for img in imgs:
             results = self.model_classify.predict(img)
             probs.append(results[0].probs)
-        top5_data = [(prob.top5, prob.top5conf) for prob in probs]
+        top5_data = [(prob.top5, prob.top5conf.cpu().numpy().tolist()) for prob in probs]
         return top5_data
 
     @staticmethod
-    def get_text(top5, top5conf):
-        results = dict.fromkeys(top5, None)
-        for idx in top5:
-            try:
-                query_result = Textdata.objects.filter(id=idx)
-                if query_result is None:
-                    raise ValueError("No text data found for id: {}".format(idx))
-            except ValueError as e:
-                print(e)
-                return None  # 返回None表示出现异常,前端显示错误信息
-            else:
-                temp = (query_result[0].name, query_result[0].habitat, query_result[0].figure,
-                        query_result[0].suggestion, query_result[0].img_path)
-                results[idx] = (temp, top5conf[idx])
+    def get_text(top5_data: list[(list, list)]):
+        """
+        对单个或多个子图的识别结果进行处理，返回文本信息等
+        results:    list[dict[int: (name, habitat, figure, suggestion, img_path, conf)]]
+        |    |--result
+        |    |    |--{id: (name, habitat, figure, suggestion, img_path, conf)}
+        Args:
+            top5_data: 单个或多个子图的top5,top5conf
+        Returns:
+            results: 单个或多个子图的文本信息列表
+        """
+        results = []
+        for top5, top5conf in top5_data:
+            result = dict.fromkeys(top5, None)
+            for idx in top5:
+                try:
+                    query_result = Textdata.objects.filter(id=idx)
+                    if query_result is None:
+                        raise ValueError("No text data found for id: {}".format(idx))
+                except ValueError as e:
+                    print(e)
+                    return None  # 返回None表示出现异常,前端显示错误信息
+                else:
+                    temp = (query_result[0].name, query_result[0].habitat, query_result[0].figure,
+                            query_result[0].suggestion, query_result[0].img_path)
+                    result[idx] = temp + (top5conf[idx],)
+            results.append(result)
         return results
 
 
