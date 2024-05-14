@@ -82,7 +82,7 @@ class Model:
                       17: '菜花原矛头蝮', 18: '虎斑颈槽蛇', 19: '金环蛇', 20: '铅色水蛇', 21: '银环蛇', 22: '黑头缅蝰',
                       23: '（尖鳞）原矛头蝮'}
 
-    def predict(self, img: Image):
+    def predict(self, img: Image | str):
         """
         detect img
         split img
@@ -95,8 +95,8 @@ class Model:
 
         """
         boxes = self.detect(img)
-        img_split = self.split_image(img, boxes)
-        top5, top5conf = self.classify(img_split)
+        img_splits = self.split_image(img, boxes)
+        top5_data = self.classify(img_splits)
 
     def detect(self, img: Image):
         """
@@ -122,26 +122,30 @@ class Model:
 
         """
         if boxes.cls.numel():
-            xyxy = boxes.xyxy.cpu().numpy().tolist()[0]
-            img_split = img.crop(xyxy)
-            return img_split
+            img_splits = []
+            xyxy_list = boxes.xyxy.cpu().numpy().tolist()
+            for xyxy in xyxy_list:
+                img_split = img.crop(xyxy)
+                img_splits.append(img_split)
+            return img_splits
         else:
             return img
 
-    def classify(self, img: Image):
+    def classify(self, imgs: list[Image]):
         """
         对预处理后的图片进行图像分类，返回top5,top5conf
         Args:
-            img: 预处理后的图片
+            imgs: 预处理后的图片
 
-        Returns:top5：分类结果列表
-                top5conf：置信度列表
+        Returns: top5_data: list[(top5, top5conf)...]
 
         """
-        results = self.model_classify.predict(img)
-        top5 = results[0].probs.top5
-        top5conf = results[0].probs.top5conf
-        return top5, top5conf
+        probs = []
+        for img in imgs:
+            results = self.model_classify.predict(img)
+            probs.append(results[0].probs)
+        top5_data = [(prob.top5, prob.top5conf) for prob in probs]
+        return top5_data
 
     def get_text(self, top5, top5conf):
         results = dict.fromkeys(top5, None)
