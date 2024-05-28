@@ -22,8 +22,8 @@ from TestModel.models import Textdata
 
 class Model:
     def __init__(self):
-        self.model_detect_path = r'model_detect.onnx'
-        self.model_classify_path = r'model_classify.onnx'
+        self.model_detect_path = r'./pt/model_detect.pt'
+        self.model_classify_path = r'./pt/model_cls.pt'
         self.model_detect = YOLO(self.model_detect_path)
         self.model_classify = YOLO(self.model_classify_path)
         self.names = (
@@ -41,7 +41,9 @@ class Model:
             img:
 
         Returns:
-
+            results:    list[dict[int: (name, habitat, figure, suggestion, conf)]]
+            |    |--result
+            |    |    |--{id: (name, habitat, figure, suggestion, conf)}
         """
         boxes = self.detect(img)
         img_splits = self.split_image(img=img, boxes=boxes)
@@ -103,9 +105,9 @@ class Model:
     def get_text(top5_data: list[(list, list)]):
         """
         对单个或多个子图的识别结果进行处理，返回文本信息等
-        results:    list[dict[int: (name, habitat, figure, suggestion, img_path, conf)]]
+        results:    list[dict[int: (name, habitat, figure, suggestion, conf)]]
         |    |--result
-        |    |    |--{id: (name, habitat, figure, suggestion, img_path, conf)}
+        |    |    |--{id: (name, habitat, figure, suggestion, conf)}
         Args:
             top5_data: 单个或多个子图的top5,top5conf
         Returns:
@@ -124,7 +126,7 @@ class Model:
                     return None  # 返回None表示出现异常,前端显示错误信息
                 else:
                     temp = (query_result[0].name, query_result[0].habitat, query_result[0].figure,
-                            query_result[0].suggestion, query_result[0].img_path)
+                            query_result[0].suggestion)
                     result[idx] = temp + (top5conf[idx],)
             results.append(result)
         return results

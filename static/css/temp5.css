@@ -1,0 +1,124 @@
+h1{
+  text-align: center;
+}
+/*上传框样式*/
+input[type=file]{
+    display: none;
+}
+
+.btn{
+	width: 100px;
+  height: 44px;
+  float:left;
+  border: none;
+  background-color: #4e6ef2;
+    color: #fff;
+    cursor: pointer;
+
+}
+
+input[type=text], select {
+width: 496px;
+    height: 44px;
+
+  padding: 0 16px;
+
+	float:left;
+  border: none;
+
+}
+
+.file_or_url {
+    width: 600px;
+    height: 44px;
+  margin:auto;
+    border: 2px solid #4569ff;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+input[type=submit] {
+  width: 600px;
+  background-color: #4CAF50;
+  color: white;
+  padding: 14px 20px;
+  /*margin : auto;*/
+  margin-left: calc(50% - 300px);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  background-color: #45a049;
+}
+
+div.input {
+  border-radius: 5px;
+  background-color: #f2f2f2;
+  padding: 20px;
+}
+
+/*结果框样式*/
+div.result {
+    display: none;
+    border: 1px solid #ccc;
+}
+
+div.img:hover {
+    border: 1px solid #777;
+}
+
+/*Saucenao样式*/
+.result{
+	background-color:#2d2d2d;
+    color:#FFF;
+	border:1px solid #252525;
+	text-align:left;/*for the 'no results' message*/
+    margin: auto;
+}
+.result_table{
+	/*width: 100%;*/
+	border:2px solid #252525;
+	border-collapse:collapse;
+    /*margin: auto;*/
+}
+.result_table td{
+    padding:15px;
+}
+.result_table_image{
+	background-color:#272727;
+	vertical-align:top;
+	/*padding:15px;*/
+}
+.original_image img{
+    max-width: 150px;
+}
+.example_image img{
+    max-width: 150px;
+}
+
+.result_content{
+	text-align:left;
+	padding-left:5px;
+	clear:left;
+}
+.result_image{
+	position: relative;
+	float:left;
+	text-align:left;
+	vertical-align: top;
+	min-width:150px;
+}
+
+.result_title{
+	margin-bottom:5px;
+    width: 400px;
+    word-wrap: break-word; /* 确保长单词也会被打断 */
+}
+.result_content_column{
+	float:left;
+	margin-right:50px;
+    width: 400px;
+    word-wrap: break-word; /* 确保长单词也会被打断 */
+}
