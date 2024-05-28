@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>蛇类识别</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.net/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/css/temp5.css">
+    <script src="https://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdn.staticfile.net/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.6.0.min.js"></script>
+    <script src="/static/js/temp5.js"></script>
+</head>
+<body>
+<h1>图片处理</h1>
+<div id="imagePreview">
+</div> <!-- 用于展示上传的图片的div元素 -->
+<div class="input">
+    <form id="upload-form" enctype="multipart/form-data">
+        <input type="file" id="file">
+        <div class="file_or_url">
+            <input type="text" class="form-control" placeholder="图片URL">
+            <button class="btn" type="button" onclick="button_click()">上传文件</button>
+        </div>
+        <br>
+        <input type="submit" value="提交">
+
+    </form>
+</div>
+
+
+<div id="status"></div>
+<div id="response"></div>
+
+<div class="result" id="result">
+    <table id="result_table" class="result_table">
+        <tr>
+            <td rowspan="5" style="vertical-align: top;">
+                <div class="original_image">
+                    <img id="orig_img1" src="/static/images/0.jpg" alt="orig_img1">
+                </div>
+            </td>
+            <td class="result_table_image">
+                <div class="example_image">
+                    <img id="example_img1" src="/static/images/0.jpg" alt="example_img1">
+                </div>
+            </td>
+            <td>
+                <div class="result_content">
+                    <div class="result_title">
+                        <strong>
+                            Desperados III
+                        </strong>
+                        <br>
+                    </div>
+                    <div class="result_content_column">
+                        <strong>
+                            名称:
+                        </strong>
+                        847488731
+                        <br>
+                        <strong>
+                            栖息地:
+                        </strong>
+                        panpanchenchen
+                        <br>
+                        <strong>
+                            特征:
+                        </strong>
+                        847488731
+                        <br>
+                        <strong>
+                            建议:
+                        </strong>
+                        847488731
+                        <br>
+                        <strong>
+                            置信度:
+                        </strong>
+                        847488731
+                        <br>
+                        <br>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="result_table_image">
+                <div class="example_image">
+                    <img id="example_img1" src="/static/images/0.jpg" alt="example_img1">
+                </div>
+            </td>
+            <td>
+                <div class="result_content">
+                    <div class="result_title">
+                        <strong>
+                            Desperados III
+                        </strong>
+                        <br>
+                    </div>
+                    <div class="result_content_column">
+                        <strong>
+                            名称:
+                        </strong>
+                        847488731
+                        <br>
+                        <strong>
+                            栖息地:
+                        </strong>
+                        panpanchenchen
+                        <br>
+                        <strong>
+                            特征:
+                        </strong>
+                        847488731
+                        <br>
+                        <strong>
+                            建议:
+                        </strong>
+                        847488731
+                        <br>
+                        <strong>
+                            置信度:
+                        </strong>
+                        847488731
+                        <br>
+                        <br>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="result_table_image">
+                <div class="example_image">
+                    <img id="example_img1" src="/static/images/0.jpg" alt="example_img1">
+                </div>
+            </td>
+            <td>
+                <div class="result_content">
+                    <div class="result_title">
+                        <strong>
+                            Desperados III
+                        </strong>
+                        <br>
+                    </div>
+                    <div class="result_content_column">
+                        <strong>
+                            名称:
+                        </strong>
+                        847488731
+                        <br>
+                        <strong>
+                            栖息地:
+                        </strong>
+                        panpanchenchen
+                        <br>
+                        <strong>
+                            特征:
+                        </strong>
+                        847488731
+                        <br>
+                        <strong>
+                            建议:
+                        </strong>
+                        847488731,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,847488731,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,847488731,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+                        <br>
+                        <strong>
+                            置信度:
+                        </strong>
+                        847488731
+                        <br>
+                        <br>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="result_table_image">
+                <div class="example_image">
+                    <img id="example_img1" src="/static/images/0.jpg" alt="example_img1">
+                </div>
+            </td>
+            <td>
+                <div class="result_content">
+                    <div class="result_title">
+                        <strong>
+                            Desperados III
+                        </strong>
+                        <br>
+                    </div>
+                    <div class="result_content_column">
+                        <strong>
+                            名称:
+                        </strong>
+                        847488731
+                        <br>
+                        <strong>
+                            栖息地:
+                        </strong>
+                        panpanchenchen
+                        <br>
+                        <strong>
+                            特征:
+                        </strong>
+                        847488731
+                        <br>
+                        <strong>
+                            建议:
+                        </strong>
+                        847488731,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,847488731,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,847488731,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+                        <br>
+                        <strong>
+                            置信度:
+                        </strong>
+                        847488731
+                        <br>
+                        <br>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="result_table_image">
+                <div class="example_image">
+                    <img id="example_img1" src="/static/images/0.jpg" alt="example_img1">
+                </div>
+            </td>
+            <td>
+                <div class="result_content">
+                    <div class="result_title">
+                        <strong>
+                            Desperados III
+                        </strong>
+                        <br>
+                    </div>
+                    <div class="result_content_column">
+                        <strong>
+                            名称:
+                        </strong>
+                        847488731
+                        <br>
+                        <strong>
+                            栖息地:
+                        </strong>
+                        panpanchenchen
+                        <br>
+                        <strong>
+                            特征:
+                        </strong>
+                        847488731
+                        <br>
+                        <strong>
+                            建议:
+                        </strong>
+                        847488731,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,847488731,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,847488731,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+                        <br>
+                        <strong>
+                            置信度:
+                        </strong>
+                        847488731
+                        <br>
+                        <br>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
+
+
+</body>
+</html>
