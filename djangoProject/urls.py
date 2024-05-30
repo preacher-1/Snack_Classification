@@ -19,8 +19,7 @@ from django.urls import path
 from testProject import views
 
 urlpatterns = [
-    # path('runoob/', views.runoob),
-    path('', views.index),
+    path('', views.preprocess),
     path('preprocess/',views.preprocess),
     path('download/',views.download_image),
     path('process/', views.process),

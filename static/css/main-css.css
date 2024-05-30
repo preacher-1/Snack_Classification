@@ -1,0 +1,276 @@
+body {
+    background-color: #f0f0f0;
+    color: #333;
+    font-family: 'Noto Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 32px;
+    text-align: center;
+    margin: 0;
+}
+
+.intro_section {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.intro_section p {
+    font-size: 18px;
+    line-height: 1.5;
+    margin: 5px auto 0 auto;
+    max-width: 800px;
+    word-wrap: break-word; /* 实现长文本自动换行 */
+}
+
+.intro_section strong {
+    color: #ff0000;
+}
+
+.upload-section {
+    margin-top: 50px;
+}
+
+.results-section {
+    margin-top: 50px;
+}
+
+.results-section h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+#imagePreview {
+    padding: 10px;
+    text-align: center;
+}
+
+#imagePreview img {
+    max-width: 200px;
+}
+
+/*上传框样式*/
+input[type=file] {
+    display: none;
+}
+
+.btn {
+    width: 20%;
+    height: 44px;
+    float: left;
+    border: none;
+    background-color: #4e6ef2;
+    color: #fff;
+    cursor: pointer;
+
+}
+
+input[type=text], select {
+    width: calc(80% - 16px);
+    height: 44px;
+
+    padding: 0 0 0 16px;
+
+    float: left;
+    border: none;
+
+}
+
+.file_or_url {
+    width: 600px;
+    height: 44px;
+    margin: auto;
+    border: 2px solid #4569ff;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+input[type=submit] {
+    width: 600px;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    /*margin : auto;*/
+    margin-left: calc(50% - 300px);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+input[type=submit]:hover {
+    background-color: #45a049;
+}
+
+div.input {
+    border-radius: 5px;
+    padding-bottom: 20px;
+}
+
+/*状态框和响应框样式*/
+.status, .response {
+    background: rgba(177, 232, 200, 0.63);
+    max-width: 600px;
+    margin: auto;
+    text-align: center;
+    /*padding: 10px;*/
+}
+
+.status *, .response *{
+    text-align: center;
+    word-wrap: break-word; /* 实现长文本自动换行 */
+    padding: 10px;
+}
+
+
+.upload-section, .results-section {
+    margin-bottom: 20px;
+}
+
+/*结果框样式*/
+div.result {
+    display: none;
+    width: 90%;
+    margin: 0 auto; /* 居中表格并留出两边空白 */
+    overflow-x: auto; /* 确保在小屏幕上表格可滚动 */
+}
+
+div.img:hover {
+    border: 1px solid #777;
+}
+
+table {
+    width: 100%;
+    border:1px solid #7e7e7e;
+    border-collapse: collapse;
+    table-layout: fixed; /* 确保单元格的宽度自动调整 */
+}
+table tr,td,th{
+    border:1px solid #dcdcdcbd;;
+}
+th {
+    padding: 5px;
+    /* border: 1px solid #dcdcdc; */
+    text-align: center;
+    vertical-align: middle;
+}
+
+td * {
+    padding: 5px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+td div {
+    word-wrap: break-word; /* 实现长文本自动换行 */
+}
+
+th {
+    background-color: #e3f2fd;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:nth-child(odd) {
+    background-color: #fff;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+img {
+    max-width: 90%; /* 限制图片最大宽度 */
+    height: auto;
+    display: block;
+    margin: 0 auto; /* 图片居中 */
+}
+
+
+@media screen and (max-width: 750px) and (min-width: 481px) {
+    h1 {
+        font-size: 24px;
+    }
+
+    .results-section h2 {
+        font-size: 20px;
+    }
+
+    th, td {
+        padding: 8px;
+    }
+
+    .btn {
+        width: 20%;
+        height: 44px;
+        float: left;
+        border: none;
+        background-color: #4e6ef2;
+        color: #fff;
+        cursor: pointer;
+
+    }
+
+    input[type=text], select {
+        width: calc(80% - 16px);
+        height: 44px;
+
+        /* padding: 0 16px; */
+
+        float: left;
+        border: none;
+
+    }
+
+    .file_or_url {
+        width: 80%;
+        height: 44px;
+        /* margin:auto; */
+        border: 2px solid #4569ff;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    input[type=submit] {
+        width: 80%;
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        /*margin : auto;*/
+        margin-left: 10%;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    table {
+        width: 384px;
+        border:1px solid #7e7e7e;
+        border-collapse: collapse;
+        table-layout: fixed; /* 确保单元格的宽度自动调整 */
+    }
+    .file_or_url {
+        width: 384px;
+        height: 44px;
+        border: 2px solid #4569ff;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+}

@@ -3,29 +3,12 @@ from ultralytics import YOLO
 from TestModel.models import Textdata
 
 
-# class myYOLO(YOLO):
-#     """
-#         result
-#         |    |--names = {dict:1000}
-#         |    |--probs
-#         |        |--data = {Tensor:(1000,)}
-#         |        |--top1 = {int}
-#         |        |--top1conf = {Tensor:()}
-#         |        |--top5 = {list:5}
-#         |        |--top5conf = {Tensor:(5,)}
-#         |    |--speed
-#         |    |--orig_img
-#         |    |--orig_shape
-#         |    |--path
-#     """
-
-
 class Model:
     def __init__(self):
-        self.model_detect_path = r'./pt/model_detect.pt'
-        self.model_classify_path = r'./pt/model_cls.pt'
-        self.model_detect = YOLO(self.model_detect_path)
-        self.model_classify = YOLO(self.model_classify_path)
+        self.model_detect_path = r'D:\djangoProject\model\pt/model_detect_sim.onnx'
+        self.model_classify_path = r'D:\djangoProject\model\pt/model_cls_sim.onnx'
+        self.model_detect = YOLO(self.model_detect_path, task='detect')
+        self.model_classify = YOLO(self.model_classify_path, task='classify')
         self.names = (
             '中介蝮', '中华珊瑚蛇（丽纹蛇）', '中国水蛇', '孟加拉眼镜蛇', '尖吻蝮', '山烙铁头', '泰国圆斑蝰', '湖北颈槽蛇', '白唇竹叶青', '白头缅蝰', '眼镜王蛇', '短尾蝮',
             '福建华珊瑚蛇（福建丽纹蛇）', '紫沙蛇', '繁花林蛇', '红脖颈槽蛇', '舟山眼镜蛇', '菜花原矛头蝮', '虎斑颈槽蛇', '金环蛇', '铅色水蛇', '银环蛇', '黑头缅蝰',
@@ -49,7 +32,7 @@ class Model:
         img_splits = self.split_image(img=img, boxes=boxes)
         top5_data = self.classify(img_splits)
         results = self.get_text(top5_data)
-        return results
+        return img_splits, results
 
     def detect(self, img: Image):
         """
@@ -60,7 +43,7 @@ class Model:
         Returns:目标检测结果
 
         """
-        results = self.model_detect.predict(img)
+        results = self.model_detect.predict(img, device='cpu')
         boxes = results[0].boxes
         return boxes
 
@@ -96,7 +79,7 @@ class Model:
         """
         probs = []
         for img in imgs:
-            results = self.model_classify.predict(img)
+            results = self.model_classify.predict(img, device='cpu')
             probs.append(results[0].probs)
         top5_data = [(prob.top5, prob.top5conf.cpu().numpy().tolist()) for prob in probs]
         return top5_data
@@ -116,23 +99,22 @@ class Model:
         results = []
         for top5, top5conf in top5_data:
             result = dict.fromkeys(top5, None)
-            for idx in top5:
+            for i, idx in enumerate(top5):
                 try:
-                    query_result = Textdata.objects.filter(id=idx)
+                    query_result = Textdata.objects.filter(id=idx).first()
                     if query_result is None:
                         raise ValueError("No text data found for id: {}".format(idx))
                 except ValueError as e:
                     print(e)
                     return None  # 返回None表示出现异常,前端显示错误信息
                 else:
-                    temp = (query_result[0].name, query_result[0].habitat, query_result[0].figure,
-                            query_result[0].suggestion)
-                    result[idx] = temp + (top5conf[idx],)
+                    temp = (query_result.name, query_result.habitat, query_result.figure,
+                            query_result.suggestion)
+                    conf = round(top5conf[i], 4)
+                    result[idx] = temp + (conf,)
             results.append(result)
         return results
 
 
 # 初始化分类模型
 yolo = Model()
-# yolo = myYOLO('/ultralytics-main/ultralytics/cfg/models/v8/yolov8m-cls.pt')
-# yolo = YOLO(r'D:\djangoProject\model\ultralytics-main\ultralytics\cfg\models\v8\yolov8m-cls.pt')

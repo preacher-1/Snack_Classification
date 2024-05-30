@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>毒蛇识别分类</title>
+    <script src="https://cdn.staticfile.net/jquery/2.2.4/jquery.min.js"></script>
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-3.6.0.min.js"></script>
+    <!-- 引入 Fancybox CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css">
+    <!-- 引入 Fancybox JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
+    <link rel="stylesheet" href="/static/css/main-css.css">
+    <script src="/static/js/main-js.js"></script>
+</head>
+<body>
+<header>
+    <h1>毒蛇识别分类</h1>
+</header>
+<section class="intro_section">
+    <p>毒蛇识别分类是基于深度学习技术的图像识别技术，能够根据提供的图片识别出毒蛇的种类并给出常见栖息地、特征和紧急医疗措施等信息。置信度为网站给出的参考置信度，置信度越高，说明分类结果的可靠性越高。</p>
+    <p>使用本网站提供的识别分类结果，可以为紧急医疗救助提供初步参考，帮助患者更快、更准确地找到适合的治疗方法。</p>
+    <p><strong>注意：本网站提供识别分类结果仅供参考，请咨询专业医生或工作者获取专业建议。</strong></p>
+</section>
+<section class="upload_section">
+    <div id="imagePreview">
+    </div> <!-- 用于展示上传的图片的div元素 -->
+    <div class="input">
+        <form id="upload-form" enctype="multipart/form-data">
+            <input type="file" id="image">
+            <div class="file_or_url">
+                <input type="text" id="image_url" class="form-control" placeholder="图片URL">
+                <button class="btn" type="button" onclick="button_click()">选择图片</button>
+            </div>
+            <br>
+            <input type="submit" value="提交">
+        </form>
+    </div>
+    <div id="status" class="status"></div>
+    <div id="response" class="response"></div>
+</section>
+<section class="result_section">
+    <div class="result" id="result">
+    </div>
+</section>
+</body>
+</html>

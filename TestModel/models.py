@@ -9,4 +9,3 @@ class Textdata(models.Model):
     habitat = models.TextField()
     figure = models.TextField()
     suggestion = models.TextField()
-    img_path = models.ImageField(upload_to='images/')

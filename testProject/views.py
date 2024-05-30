@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.conf import settings
 
 import os
-# from model import yolo
+from model import yolo
 import base64
 from PIL import Image
 from io import BytesIO
@@ -17,76 +17,8 @@ import time
 
 # Create your views here.
 
-
-# def search_post(request):
-#     """
-#     return
-#         --results[5]
-#             --each result
-#                 --image example
-#                 --strs
-#                     --snake class
-#                     --acc
-#                     --area
-#                     --figures
-#                     --tips
-#     """
-#
-#     if request.method == 'POST':
-#
-#         ctx = {'img': None, 'textmessage': None}  # 要返回给html的字典，包含预留记号的对应内容
-#
-#         file, url, text = None, None, 'example'
-#         url = request.POST.get('url')
-#         file = request.FILES.get('file')
-#         pic = None
-#         result, time_taken, image_size = download_image(url)
-#
-#         if file:
-#             pic = yolo.predict(file.read())
-#         elif url:
-#             pic = yolo.process_url(url)
-#
-#         if pic is not None:
-#             b64str = base64.b64encode(pic).decode('utf-8')  # pic
-#             ctx['img'] = f'<img src="data:image/jpeg;base64,{b64str}" width = "300">'
-#         else:
-#             ctx['img'] = 'No image found'
-#         ctx['textmessage'] = text
-#
-#         return render(request, "search.html", ctx)
-#
-#     else:
-#         print('GET ')
-#         return render(request, "search.html")
-
-
-# def process(request):
-#     ctx = {'img': None, 'textmessage': None}  # 要返回给html的字典，包含预留记号的对应内容
-#     file, url, text = None, None, 'example'
-#     file = request.FILES.get('file')
-#     url = request.POST.get('url')
-#     results = None
-#
-#     if file:
-#         results = yolo.predict(file.read())
-#     elif url:
-#         flag, used_time, img_size, image = yolo.process_url(url)
-#
-#     if pic is not None:
-#         b64str = base64.b64encode(pic).decode('utf-8')  # pic
-#         ctx['img'] = f'<img src="data:image/jpeg;base64,{b64str}" width = "300">'
-#     else:
-#         ctx['img'] = 'No image found'
-#     ctx['textmessage'] = text
-
-
 def is_ajax(request):
     return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
-
-
-def index(request):
-    return render(request, 'webflow.html')
 
 
 def preprocess(request):
@@ -114,33 +46,7 @@ def preprocess(request):
             except Exception as e:
                 print(e)
                 return JsonResponse({'stat': 'failed', 'error': f'无法处理上传文件: {str(e)}'})
-            # download_info = download_image(url)
-            # if 'error' in download_info:
-            #     return JsonResponse({'stat': 'error','error': download_info['error']}, status=400)
-            # results = yolo.process_url(url
-        # # 测试数据
-        # results = [{0: ['name0', 'habitat0', 'figure0', 'suggestion0', 'conf0'],
-        #             1: ['name1', 'habitat1', 'figure1', 'suggestion1', 'conf1'],
-        #             2: ['name2', 'habitat2', 'figure2', 'suggestion2', 'conf2']}]
-        #
-        # if results is None:
-        #     return JsonResponse({'stat': 'error', 'error': '图片处理过程中出现错误，请截取屏幕并反馈给工作人员。'}, status=500)
-        #
-        # response_data = {
-        #     'stat': '',
-        #     'message': '图片处理完成',
-        #     'download_info': {
-        #         'message': '图片下载成功',
-        #         'orig_image': file if file else download_info['image'],
-        #         # 'image': download_info['image'],
-        #         # 'content_type': download_info['content_type'],
-        #         'size': download_info['size'],
-        #         'used_time': download_info['used_time']
-        #     },
-        #     'process_result': results
-        # }
-        # return JsonResponse(response_data)
-    # return render(request, 'temp2.html')
+    return render(request, 'main.html')
 
 
 # 处理URL，获取图片并进行预测
@@ -166,7 +72,8 @@ def download_image(request):
 
         # 检查文件大小
         image_size = int(response.headers.get('Content-Length')) / 1024  # 单位KB
-        if image_size and int(image_size) > max_size:
+        image_size = round(image_size, 2)
+        if image_size and image_size > max_size:
             return JsonResponse({'stat': 'failed', 'error': '图片大小超过限制'})
 
         save_path = os.path.join(settings.BASE_DIR, 'upload_temp_images')  # 确定保存图片的路径
@@ -198,19 +105,21 @@ def download_image(request):
 
 def process(request):
     if is_ajax(request=request) and request.method == 'POST':
-        b64str, results = None, None
+        b64strs, results = [], None
         try:
             # 读取上一阶段保存本地的图片文件
             path = request.POST.get('path')
             image = Image.open(path)
             # 得到图片处理结果
-            # results = yolo.predict(image)
-            results = [{0: ['name0', 'habitat0', 'figure0', 'suggestion0', 'conf0'],
-                        1: ['name1', 'habitat1', 'figure1', 'suggestion1', 'conf1'],
-                        2: ['name2', 'habitat2', 'figure2', 'suggestion2', 'conf2']}]
+            img_splits, results = yolo.predict(image)
+
             # 原始图片base64编码
-            with open(path, 'rb') as f:
-                b64str = base64.b64encode(f.read()).decode('utf-8')
+            for img in img_splits:
+                buffered = BytesIO()
+                img.save(buffered, format="JPEG")
+                img_str = base64.b64encode(buffered.getvalue())
+                b64strs.append(f'data:image/jpeg;base64,{img_str.decode("utf-8")}')
+
             # 立即销毁本地图片
             image.close()
             os.remove(path)
@@ -219,14 +128,14 @@ def process(request):
             if results is None:
                 return JsonResponse({'stat': 'error', 'error': '图片处理过程中出现错误，请截取屏幕并反馈给工作人员。'})
             return JsonResponse(
-                {'stat': 'completed', 'orig_image': f'data:image/jpeg;base64,{b64str}', 'results': results})
+                {'stat': 'completed', 'orig_images': b64strs, 'results': results})
         except NotImplementedError as e:
             # 本地图片删除失败，记录日志并通知人工介入
             print(e)
             if results is None:
                 return JsonResponse({'stat': 'error', 'error': '图片处理过程中出现错误，请截取屏幕并反馈给工作人员。'})
             return JsonResponse(
-                {'stat': 'completed', 'orig_image': f'data:image/jpeg;base64,{b64str}', 'results': results})
+                {'stat': 'completed', 'orig_images': b64strs, 'results': results})
         except Exception as e:
             return JsonResponse({'stat': 'failed', 'error': str(e)})
-    return JsonResponse({'stat': 'failed'})
+    return JsonResponse({'stat': 'failed', 'error': '非法请求'})
